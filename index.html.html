@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Votació Poemes Finalistes dels Jocs Florals</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --dark: #0D0D0D;
+    --dark2: #1A1A1A;
+    --dark3: #242424;
+    --border: #2e2e2e;
+    --text: #F0EDE8;
+    --text-muted: #777;
+    --red: #c0392b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse at 15% 5%, rgba(201,168,76,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 95%, rgba(201,168,76,0.05) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+  }
+
+  /* ── CAPÇALERA ─────────────────────────────── */
+  .page-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .eyebrow {
+    font-size: 10.5px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 18px;
+    font-weight: 500;
+  }
+
+  .page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 900;
+    line-height: 1.12;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+
+  .page-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .page-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.65;
+  }
+
+  .ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 28px auto 0;
+    color: var(--gold);
+    opacity: 0.6;
+    font-size: 1.1rem;
+    letter-spacing: 0.2em;
+  }
+
+  .ornament::before,
+  .ornament::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+  }
+  .ornament::after {
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  /* ── SECCIÓ ────────────────────────────────── */
+  .section-block {
+    margin-bottom: 72px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .section-tag {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--dark);
+    font-family: 'Playfair Display', serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── INSTRUCCIONS ──────────────────────────── */
+  .instructions {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+
+  .instructions strong { color: var(--gold-light); font-weight: 500; }
+
+  /* ── PROGRÉS ───────────────────────────────── */
+  .progress-section { margin-bottom: 24px; }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .progress-header .count { color: var(--gold); font-weight: 500; }
+
+  .progress-track {
+    height: 3px;
+    background: var(--dark3);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 2px;
+    transition: width 0.35s ease;
+    width: 0%;
+  }
+
+  .score-chips {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    border: 1.5px solid var(--border);
+    color: var(--text-muted);
+    background: var(--dark2);
+    transition: all 0.25s;
+  }
+
+  .chip.used {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--dark);
+    border-color: var(--gold);
+    box-shadow: 0 0 10px rgba(201,168,76,0.25);
+  }
+
+  /* ── CANDIDATS ─────────────────────────────── */
+  .candidates-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .candidate-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .candidate-row.assigned {
+    border-color: rgba(201,168,76,0.35);
+    background: rgba(201,168,76,0.03);
+  }
+
+  .candidate-row.conflict {
+    border-color: rgba(192,57,43,0.5);
+  }
+
+  .cand-index {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .cand-info {
+    flex: 1;
+  }
+
+  .cand-name {
+    font-size: 0.97rem;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .cand-group {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .score-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .score-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .score-select {
+    appearance: none;
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 7px 34px 7px 13px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23777' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 11px center;
+    width: 76px;
+  }
+
+  .score-select:focus { border-color: var(--gold); }
+
+  .candidate-row.conflict .score-select { border-color: var(--red); }
+
+  .score-badge {
+    display: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--dark);
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 900;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 14px rgba(201,168,76,0.28);
+  }
+
+  .candidate-row.assigned .score-badge { display: flex; }
+
+  /* ── ALERTA ────────────────────────────────── */
+  .alert {
+    background: rgba(192,57,43,0.08);
+    border: 1px solid rgba(192,57,43,0.3);
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: 0.85rem;
+    color: #e07a6e;
+    margin-bottom: 20px;
+    display: none;
+  }
+  .alert.show { display: block; }
+
+  /* ── BOTONS ────────────────────────────────── */
+  .submit-section {
+    text-align: center;
+    padding-top: 8px;
+  }
+
+  .btn-submit {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--dark);
+    border: none;
+    border-radius: 8px;
+    padding: 15px 44px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    text-transform: uppercase;
+  }
+
+  .btn-submit:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+  .btn-submit:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .btn-reset {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 13px 26px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    margin-left: 12px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-reset:hover { border-color: #555; color: var(--text); }
+
+  /* ── PANELL ÈXIT ───────────────────────────── */
+  .success-panel {
+    display: none;
+    background: var(--dark2);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 12px;
+    padding: 36px 28px;
+    text-align: center;
+    animation: fadeUp 0.4s ease;
+    margin-top: 16px;
+  }
+  .success-panel.show { display: block; }
+  .section-form.hidden { display: none; }
+
+  .success-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 1.6rem;
+    color: var(--dark);
+  }
+
+  .success-panel h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+  }
+
+  .success-panel p { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 24px; }
+
+  .results-list {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  .result-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.875rem;
+    gap: 12px;
+  }
+  .result-row:last-child { border-bottom: none; }
+
+  .result-left { flex: 1; }
+  .result-group-label { font-size: 0.75rem; color: var(--text-muted); }
+
+  .result-pts {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 1.05rem;
+    white-space: nowrap;
+  }
+
+  /* ── SEPARADOR SECCIONS ────────────────────── */
+  .sections-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 0 72px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- CAPÇALERA GLOBAL -->
+  <header class="page-header">
+    <p class="eyebrow">Institut · Jocs Florals</p>
+    <h1 class="page-title">Votació Poemes Finalistes<br><em>dels Jocs Florals</em></h1>
+    <p class="page-subtitle">
+      Puntua cada poema finalista amb un número únic de l'1 al 8.
+      El 8 és la puntuació més alta. Cap número es pot repetir dins de cada apartat.
+    </p>
+    <div class="ornament">✦</div>
+  </header>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SECCIÓ A: 1r i 2n ESO                      -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="section-block" id="block-A">
+
+    <div class="section-header">
+      <div class="section-tag">Apartat 1</div>
+      <h2 class="section-title">1r i 2n d'ESO</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="section-form" id="form-A">
+
+      <div class="instructions">
+        <strong>Com puntuar:</strong> Selecciona una puntuació diferent per a cada poema.
+        El <strong>8</strong> és el millor i l'<strong>1</strong> el menys valorat.
+        Cada número només es pot fer servir <strong>una vegada</strong> en aquest apartat.
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-header">
+          <span>Puntuacions assignades</span>
+          <span class="count" id="countA">0 / 8</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="fillA"></div>
+        </div>
+        <div class="score-chips" id="chipsA"></div>
+      </div>
+
+      <div class="candidates-grid" id="gridA"></div>
+
+      <div class="alert" id="alertA">
+        ⚠️ Hi ha puntuacions repetides. Assegura't que cada número s'utilitza només una vegada.
+      </div>
+
+      <div class="submit-section">
+        <button class="btn-submit" id="btnA" disabled onclick="submitSection('A')">
+          Enviar votació d'aquest apartat
+        </button>
+        <button class="btn-reset" onclick="resetSection('A')">Reiniciar</button>
+      </div>
+
+    </div><!-- /form-A -->
+
+    <div class="success-panel" id="success-A">
+      <div class="success-icon">✓</div>
+      <h3>Votació registrada!</h3>
+      <p>La puntuació per a 1r i 2n d'ESO s'ha enviat correctament.</p>
+      <div class="results-list" id="results-A"></div>
+      <button class="btn-reset" onclick="resetSection('A')">Tornar a votar aquest apartat</button>
+    </div>
+
+  </div><!-- /block-A -->
+
+  <hr class="sections-divider">
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- SECCIÓ B: 3r i 4t ESO                      -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="section-block" id="block-B">
+
+    <div class="section-header">
+      <div class="section-tag">Apartat 2</div>
+      <h2 class="section-title">3r i 4t d'ESO</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="section-form" id="form-B">
+
+      <div class="instructions">
+        <strong>Com puntuar:</strong> Selecciona una puntuació diferent per a cada poema.
+        El <strong>8</strong> és el millor i l'<strong>1</strong> el menys valorat.
+        Cada número només es pot fer servir <strong>una vegada</strong> en aquest apartat.
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-header">
+          <span>Puntuacions assignades</span>
+          <span class="count" id="countB">0 / 8</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="fillB"></div>
+        </div>
+        <div class="score-chips" id="chipsB"></div>
+      </div>
+
+      <div class="candidates-grid" id="gridB"></div>
+
+      <div class="alert" id="alertB">
+        ⚠️ Hi ha puntuacions repetides. Assegura't que cada número s'utilitza només una vegada.
+      </div>
+
+      <div class="submit-section">
+        <button class="btn-submit" id="btnB" disabled onclick="submitSection('B')">
+          Enviar votació d'aquest apartat
+        </button>
+        <button class="btn-reset" onclick="resetSection('B')">Reiniciar</button>
+      </div>
+
+    </div><!-- /form-B -->
+
+    <div class="success-panel" id="success-B">
+      <div class="success-icon">✓</div>
+      <h3>Votació registrada!</h3>
+      <p>La puntuació per a 3r i 4t d'ESO s'ha enviat correctament.</p>
+      <div class="results-list" id="results-B"></div>
+      <button class="btn-reset" onclick="resetSection('B')">Tornar a votar aquest apartat</button>
+    </div>
+
+  </div><!-- /block-B -->
+
+</div><!-- /page -->
+
+<script>
+// ══════════════════════════════════════════════════════
+// CONFIGURACIÓ DE CANDIDATS
+// ══════════════════════════════════════════════════════
+const SECTIONS = {
+  A: {
+    label: '1r i 2n d\'ESO',
+    candidates: [
+      { id: 'A1', name: 'Finalista 1', group: '1r ESO – Grup A' },
+      { id: 'A2', name: 'Finalista 2', group: '1r ESO – Grup A' },
+      { id: 'A3', name: 'Finalista 1', group: '1r ESO – Grup B' },
+      { id: 'A4', name: 'Finalista 2', group: '1r ESO – Grup B' },
+      { id: 'A5', name: 'Finalista 1', group: '2n ESO – Grup A' },
+      { id: 'A6', name: 'Finalista 2', group: '2n ESO – Grup A' },
+      { id: 'A7', name: 'Finalista 1', group: '2n ESO – Grup B' },
+      { id: 'A8', name: 'Finalista 2', group: '2n ESO – Grup B' },
+    ]
+  },
+  B: {
+    label: '3r i 4t d\'ESO',
+    candidates: [
+      { id: 'B1', name: 'Finalista 1', group: '3r ESO – Grup A' },
+      { id: 'B2', name: 'Finalista 2', group: '3r ESO – Grup A' },
+      { id: 'B3', name: 'Finalista 1', group: '3r ESO – Grup B' },
+      { id: 'B4', name: 'Finalista 2', group: '3r ESO – Grup B' },
+      { id: 'B5', name: 'Finalista 1', group: '4t ESO – Grup A' },
+      { id: 'B6', name: 'Finalista 2', group: '4t ESO – Grup A' },
+      { id: 'B7', name: 'Finalista 1', group: '4t ESO – Grup B' },
+      { id: 'B8', name: 'Finalista 2', group: '4t ESO – Grup B' },
+    ]
+  }
+};
+// ══════════════════════════════════════════════════════
+
+const MAX = 8;
+const votes = { A: {}, B: {} };
+
+function init() {
+  ['A', 'B'].forEach(sec => {
+    buildChips(sec);
+    buildGrid(sec);
+  });
+}
+
+function buildChips(sec) {
+  const el = document.getElementById(`chips${sec}`);
+  el.innerHTML = '';
+  for (let i = MAX; i >= 1; i--) {
+    const c = document.createElement('div');
+    c.className = 'chip';
+    c.id = `chip-${sec}-${i}`;
+    c.textContent = i;
+    el.appendChild(c);
+  }
+}
+
+function buildGrid(sec) {
+  const grid = document.getElementById(`grid${sec}`);
+  grid.innerHTML = '';
+  SECTIONS[sec].candidates.forEach((c, idx) => {
+    const row = document.createElement('div');
+    row.className = 'candidate-row';
+    row.id = `row-${c.id}`;
+    row.innerHTML = `
+      <div class="cand-index">${idx + 1}</div>
+      <div class="cand-info">
+        <div class="cand-name">${c.name}</div>
+        <div class="cand-group">${c.group}</div>
+      </div>
+      <div class="score-selector">
+        <span class="score-label">Punts</span>
+        <select class="score-select" id="sel-${c.id}" onchange="onVote('${sec}','${c.id}',this.value)">
+          <option value="">—</option>
+          ${Array.from({length: MAX}, (_, i) => MAX - i)
+            .map(n => `<option value="${n}">${n}</option>`).join('')}
+        </select>
+      </div>
+      <div class="score-badge" id="badge-${c.id}"></div>
+    `;
+    grid.appendChild(row);
+  });
+}
+
+function onVote(sec, cid, val) {
+  if (val === '') delete votes[sec][cid];
+  else votes[sec][cid] = parseInt(val);
+  refresh(sec);
+}
+
+function refresh(sec) {
+  const v = votes[sec];
+  const cands = SECTIONS[sec].candidates;
+
+  // Detectar duplicats
+  const counts = {};
+  Object.values(v).forEach(s => { counts[s] = (counts[s] || 0) + 1; });
+  const hasDup = Object.values(counts).some(x => x > 1);
+
+  // Chips
+  const used = new Set(Object.values(v));
+  for (let i = 1; i <= MAX; i++) {
+    document.getElementById(`chip-${sec}-${i}`)
+      .classList.toggle('used', used.has(i));
+  }
+
+  // Files
+  cands.forEach(c => {
+    const row   = document.getElementById(`row-${c.id}`);
+    const badge = document.getElementById(`badge-${c.id}`);
+    const score = v[c.id];
+    const has   = score !== undefined;
+
+    row.classList.toggle('assigned', has);
+    row.classList.toggle('conflict', has && counts[score] > 1);
+
+    if (has) badge.textContent = score;
+  });
+
+  // Progrés
+  const n = Object.keys(v).length;
+  document.getElementById(`count${sec}`).textContent = `${n} / ${MAX}`;
+  document.getElementById(`fill${sec}`).style.width = `${(n / MAX) * 100}%`;
+
+  // Alerta
+  document.getElementById(`alert${sec}`)
+    .classList.toggle('show', hasDup && n > 1);
+
+  // Botó
+  document.getElementById(`btn${sec}`).disabled = !(n === MAX && !hasDup);
+}
+
+function submitSection(sec) {
+  const cands = SECTIONS[sec].candidates;
+  const v = votes[sec];
+
+  const sorted = [...cands]
+    .map(c => ({ ...c, score: v[c.id] }))
+    .sort((a, b) => b.score - a.score);
+
+  const list = document.getElementById(`results-${sec}`);
+  list.innerHTML = sorted.map(r => `
+    <div class="result-row">
+      <div class="result-left">
+        <div>${r.name}</div>
+        <div class="result-group-label">${r.group}</div>
+      </div>
+      <div class="result-pts">${r.score} pts</div>
+    </div>
+  `).join('');
+
+  document.getElementById(`form-${sec}`).classList.add('hidden');
+  document.getElementById(`success-${sec}`).classList.add('show');
+
+  // Per connectar amb un backend o Google Sheets:
+  // sendToBackend(sec, votes[sec]);
+}
+
+function resetSection(sec) {
+  votes[sec] = {};
+  document.getElementById(`form-${sec}`).classList.remove('hidden');
+  document.getElementById(`success-${sec}`).classList.remove('show');
+  buildChips(sec);
+  buildGrid(sec);
+  document.getElementById(`count${sec}`).textContent = `0 / ${MAX}`;
+  document.getElementById(`fill${sec}`).style.width = '0%';
+  document.getElementById(`btn${sec}`).disabled = true;
+  document.getElementById(`alert${sec}`).classList.remove('show');
+}
+
+init();
+</script>
+</body>
+</html>
