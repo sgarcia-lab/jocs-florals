@@ -1,3 +1,6 @@
+Votacio jocs florals · HTML
+Copiar
+
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -779,7 +782,7 @@ function buildGrid(sec) {
     row.innerHTML = `
       <div class="cand-index">${idx + 1}</div>
       <div class="cand-info">
-        <div class="cand-name">${c.name}</div>
+        <div class="cand-name" id="name-${c.id}">${NOMS[c.id] || c.name}</div>
         <div class="cand-group">${c.group}</div>
       </div>
       <div class="score-selector">
@@ -870,14 +873,40 @@ function submitSection(sec) {
   sendToSheets(sec, votes[sec]);
 }
  
-const APPS_SCRIPT_URL = 'https://script.google.com/a/macros/begues.manyanet.org/s/AKfycbzsPWH05tNVsItukg_5wpBOW5RTbgPo3P0HYJl1E856ERuyIWnLRqZYra6SJER9t6Ph/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzW812LexBrEbJV9kGVNthhVxnacy4rSQa91VV6JnCgIZ-DDXaTBQjIf0c9BIIPbzhQ/exec';
+ 
+// Noms carregats del Google Sheets
+let NOMS = {};
+ 
+// Carrega els noms en iniciar la pàgina
+async function loadNoms() {
+  try {
+    const res = await fetch(APPS_SCRIPT_URL);
+    const data = await res.json();
+    if (data.status === 'ok') {
+      const idsA = ['A1','A2','A3','A4','A5','A6','A7','A8'];
+      const idsB = ['B1','B2','B3','B4','B5','B6','B7','B8'];
+      data.noms.forEach((item, i) => {
+        const id = i < 8 ? idsA[i] : idsB[i - 8];
+        NOMS[id] = item.nom || item.etiqueta;
+      });
+      // Actualitza els noms a la pàgina
+      Object.keys(NOMS).forEach(id => {
+        const nameEl = document.getElementById('name-' + id);
+        if (nameEl && NOMS[id]) nameEl.textContent = NOMS[id];
+      });
+    }
+  } catch(err) {
+    console.log('No s\'han pogut carregar els noms:', err);
+  }
+}
  
 function sendToSheets(section, votesObj) {
   fetch(APPS_SCRIPT_URL, {
     method: 'POST',
     mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ section: section, votes: votesObj })
+    body: JSON.stringify({ section: section, votes: votesObj, names: NOMS })
   }).catch(err => console.error('Error enviant vots:', err));
 }
  
@@ -894,6 +923,7 @@ function resetSection(sec) {
 }
  
 init();
+loadNoms();
 </script>
 </body>
 </html>
